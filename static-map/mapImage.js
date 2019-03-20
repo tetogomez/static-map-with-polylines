@@ -7,54 +7,46 @@ import {
   getDirectionUrl,
   IMAGE_FORMATS,
   MAP_TYPES,
-  getStaticMapUrlOneMarket
+  getStaticMapUrlOneMarket,
+  getDefaultSizeMap
 } from "../utils";
 
 /**
  * Main static map component logic
  *
  * @param {{
- *      latitude: string,
- *      longitude: string,
- *      originIcon: string,
- *      latitudeDestination: string,
- *      longitudeDestination: string,
- *      destinationIcon: string,
+ *      firstLocation: {
+ *        latitude: string,
+ *        longitude: string,
+ *        icon: string
+ *      }
+ *      secondLocation: {
+ *        latitude: string,
+ *        longitude: string,
+ *        icon: string
+ *      }
  *      zoom: number,
  *      scale: number,
  *      format: string,
  *      mapType: string,
- *      hasCenterMarker: boolean,
  *      apiKey: string,
  *      directionsApiKey: string,
  *      useMapOnlySignal: boolean,
- *      mapHeight: number,
+ *      size: object,
  *      style: object
  * }} props
  */
 function StaticMapPolylines(props) {
   const [wayPoints, setWayPoint] = useState(null);
   const [uri, setUri] = useState(null);
-  const [sizeMap, setSizeMap] = useState(null);
 
   useEffect(() => {
     if (props.useMapOnlySignal) {
-      const window = Dimensions.get("window");
-      const sizeMap = {
-        width: Math.round(window.width),
-        height: props.mapHeight
-      };
-      const uri = getStaticMapUrlOneMarket({ ...props, size: sizeMap });
+      const uri = getStaticMapUrlOneMarket({ ...props });
 
-      setSizeMap(sizeMap);
       setUri(uri);
     } else {
       const directionsUrl = getDirectionUrl(props);
-      const window = Dimensions.get("window");
-      const sizeMap = {
-        width: Math.round(window.width),
-        height: Math.round(props.mapHeight)
-      };
 
       fetch(directionsUrl)
         .then(response => response.json())
@@ -63,10 +55,8 @@ function StaticMapPolylines(props) {
           const uri = getStaticMapUrl({
             ...props,
             routeMaps: wayPoints.overview_polyline.points,
-            size: sizeMap
           });
 
-          setSizeMap(sizeMap);
           setUri(uri);
           setWayPoint(wayPoints);
         })
@@ -80,7 +70,7 @@ function StaticMapPolylines(props) {
     <View>
       {uri && (
         <Image
-          style={[props.style, sizeMap]}
+          style={[props.style, props.size]}
           resizeMode={"contain"}
           source={{ uri }}
         />
@@ -93,8 +83,7 @@ StaticMapPolylines.defaultProps = {
   scale: defaultMapScale(PixelRatio),
   format: IMAGE_FORMATS.PNG,
   mapType: MAP_TYPES.ROADMAP,
-  hasCenterMarker: true,
-  mapHeight: 500
+  size: getDefaultSizeMap(),
 };
 
 export default StaticMapPolylines;

@@ -1,4 +1,4 @@
-import { Platform } from 'react-native';
+import { Platform, Dimensions } from 'react-native';
 
 
 const ROOT_URL = 'https://maps.googleapis.com/maps/api/staticmap';
@@ -7,7 +7,6 @@ const ROOT_DIRECTION_URL = 'https://maps.googleapis.com/maps/api/directions/json
 export const IS_IOS = Platform.OS === 'ios';
 
 export const DEFAULT_MESSAGES = {
-  title: null,
   dialogTitle: 'Open in Maps',
   dialogMessage: 'What app would you like to use?',
   cancelText: 'Cancel',
@@ -70,64 +69,53 @@ export const TITLES = {
 export const IMAGE_FORMATS_VALUES = keyValues(IMAGE_FORMATS);
 export const MAP_TYPES_VALUES = keyValues(MAP_TYPES);
 
-export function getStaticMapUrl(props) {
-  const {
-    routeMaps,
-    latitude,
-    longitude,
-    originIcon,
-    latitudeDestination,
-    longitudeDestination,
-    destinationIcon,
-    zoom,
-    scale,
-    size,
-    mapType,
-    format,
-    apiKey
-  } = props;
-
+export function getStaticMapUrl({
+  routeMaps,
+  firstLocation,
+  secondLocation,
+  zoom,
+  scale,
+  size,
+  mapType,
+  format,
+  apiKey
+}) {
   const { width, height } = size;
-  const originMarker = getMarkers(latitude, longitude, originIcon);
+  const originMarker = getMarkers(firstLocation);
   const mapTypesFormat = getMapTypes(mapType, format);
   const sizeMap = `size=${width}x${height}`;
   const polylines = getPolylines(routeMaps);
-  const destinationMarker = getMarkers(latitudeDestination, longitudeDestination, destinationIcon);
+  const destinationMarker = getMarkers(secondLocation);
 
   return `${ROOT_URL}?zoom=${zoom}&scale=${scale}&${sizeMap}&${mapTypesFormat}&${originMarker}&${destinationMarker}&${mapTypesFormat}&${polylines}&key=${apiKey}`;
 }
 
-export function getStaticMapUrlOneMarket(props) {
-  const {
-    latitude,
-    longitude,
-    originIcon,
-    zoom,
-    scale,
-    size,
-    mapType,
-    format,
-    apiKey
-  } = props;
-
+export function getStaticMapUrlOneMarket({
+  firstLocation,
+  zoom,
+  scale,
+  size,
+  mapType,
+  format,
+  apiKey
+}) {
   const { width, height } = size;
-  const originMarker = getMarkers(latitude, longitude, originIcon);
+  const originMarker = getMarkers(firstLocation);
   const mapTypesFormat = getMapTypes(mapType, format);
   const sizeMap = `size=${width}x${height}`;
 
   return `${ROOT_URL}?zoom=${zoom}&scale=${scale}&${sizeMap}&${mapTypesFormat}&${originMarker}&key=${apiKey}`;
 }
 
-export function getDirectionUrl(props) {
-  const {
-    latitude,
-    longitude,
-    latitudeDestination,
-    longitudeDestination,
-    directionsApiKey
-  } = props;
+export function getDirectionUrl({
+  firstLocation,
+  secondLocation,
+  directionsApiKey
+}) {
+  const { latitude,longitude } = firstLocation;
+  const { latitude: latitudeB ,longitude: longitudeB } = secondLocation;
 
-  return `${ROOT_DIRECTION_URL}?origin=${latitude},${longitude}&destination=${latitudeDestination},${longitudeDestination}&key=${directionsApiKey}`
+  return `${ROOT_DIRECTION_URL}?origin=${latitude},${longitude}&destination=${latitudeB},${longitudeB}&key=${directionsApiKey}`
 }
 
 export function defaultMapScale(pixelRatio) {
@@ -136,14 +124,23 @@ export function defaultMapScale(pixelRatio) {
   return isRetina ? 2 : 1;
 };
 
+export function getDefaultSizeMap() {
+  const window = Dimensions.get("window");
+
+  return {
+    width: Math.round(window.width),
+    height: 500
+  };
+}
+
 function keyValues(obj) {
   return Object.keys(obj).map(key => obj[key]);
 };
 
-function getMarkers(latitude, longitude, iconURL) {
-  if(!iconURL) return `markers=size:tiny|color:blue|${latitude},${longitude}`
+function getMarkers({ latitude, longitude, icon }) {
+  if(!icon) return `markers=size:tiny|color:blue|${latitude},${longitude}`
 
-  return `markers=icon:${iconURL}|${latitude},${longitude}`
+  return `markers=icon:${icon}|${latitude},${longitude}`
 }
 
 function getPolylines(routeMaps) {

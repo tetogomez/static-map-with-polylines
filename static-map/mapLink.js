@@ -90,35 +90,41 @@ function onAskAppChoice({ dialogTitle, dialogMessage, cancelText }) {
  * @param {{
  *     title: string | undefined | null,
  *     app: string | undefined | null
- *     dialogTitle: string | undefined | null
- *     dialogMessage: string | undefined | null
- *     cancelText: string | undefined | null
- *     latitude: number | string,
- *     longitude: number | string,
- *     sourceLatitude: number | undefined | null,
- *     sourceLongitude: number | undefined | null,
+ *     dialog: {
+ *      dialogTitle: string | undefined | null
+ *      dialogMessage: string | undefined | null
+ *      cancelText: string | undefined | null
+ *     }
+ *     originAddress: {
+ *      latitude: number | string,
+ *      longitude: number | string,
+ *     }
+ *     destinationAddress: {
+ *      latitude: number | string | undefined | null,
+ *      longitude: number | string | undefined | null,
+ *     }
  *     googleForceLatLon: boolean | undefined | null,
  * }} props
  */
-export async function onOpenMap(props) {
+export async function onOpenMap({ dialog={} , ...props }) {
   if (!props || typeof props !== 'object') {
     throw new MapsException('First parameter of `onOpenMap` should contain object with props.')
   }
 
-  if (!('latitude' in props) || !('longitude' in props)) {
-    throw new MapsException('First parameter of `onOpenMap` should contain object with at least keys `latitude` and `longitude`.')
+  if (!('originAddress' in props)) {
+    throw new MapsException('The `onOpenMap` properties should contain at least object `originAddress` with keys `latitude` and `longitude`.')
   }
 
   if ('title' in props && props.title && typeof props.title !== 'string') {
-    throw new MapsException('Option `title` should be of type `string`.')
+    throw new MapsException('Property `title` should be of type `string`.')
   }
 
   if ('googleForceLatLon' in props && props.googleForceLatLon && typeof props.googleForceLatLon !== 'boolean') {
-    throw new MapsException('Option `googleForceLatLon` should be of type `boolean`.')
+    throw new MapsException('Property `googleForceLatLon` should be of type `boolean`.')
   }
 
   if ('app' in props && props.app && APPS.indexOf(props.app) < 0) {
-    throw new MapsException('Option `app` should be undefined, null, or one of the following: "' + APPS.join('", "') + '".')
+    throw new MapsException('Property `app` should be undefined, null, or one of the following: "' + APPS.join('", "') + '".')
   }
 
   let useSourceDestiny = false;
@@ -126,22 +132,22 @@ export async function onOpenMap(props) {
   let sourceLng;
   let sourceLatLng;
 
-  if (('sourceLatitude' in props) && ('sourceLongitude' in props)) {
+  if (('destinationAddress' in props)) {
     useSourceDestiny = true;
-    sourceLat = parseFloat(props.sourceLatitude);
-    sourceLng = parseFloat(props.sourceLongitude);
+    sourceLat = parseFloat(props.destinationAddress.latitude);
+    sourceLng = parseFloat(props.destinationAddress.longitude);
     sourceLatLng = `${sourceLat},${sourceLng}`;
   }
 
-  let lat = parseFloat(props.latitude);
-  let lng = parseFloat(props.longitude);
+  let lat = parseFloat(props.originAddress.latitude);
+  let lng = parseFloat(props.originAddress.longitude);
   let latlng = `${lat},${lng}`;
   let title = props.title && props.title.length ? props.title : DEFAULT_MESSAGES.title;
   let encodedTitle = encodeURIComponent(title);
   let app = props.app && props.app.length ? props.app : null;
 
   if (!app) {
-    const { dialogTitle, dialogMessage, cancelText } = props;
+    const { dialogTitle, dialogMessage, cancelText } = dialog;
 
     app = await onAskAppChoice({
       dialogTitle: dialogTitle && dialogTitle.length ? dialogTitle : DEFAULT_MESSAGES.dialogTitle,
