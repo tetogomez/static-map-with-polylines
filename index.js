@@ -1,4 +1,4 @@
-import StaticMapPolylines from "./src/component/static-map/mapImage";
-import { onOpenMap } from "./src/component/static-map/mapLink";
+import StaticMapPolylines from "./static-map/mapImage";
+import { onOpenMap } from "./static-map/mapLink";
 
 export { StaticMapPolylines, onOpenMap };

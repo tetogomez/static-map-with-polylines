@@ -1,6 +1,6 @@
 {
   "name": "static-map-with-polyline",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "A simple static map view using polyline.",
   "main": "index.js",
   "repository": {
@@ -20,26 +20,9 @@
     "map",
     "polyiline"
   ],
-  "scripts": {
-    "test": "jest"
-  },
-  "dependencies": {
-    "react-native": "0.59.1"
-  },
-  "devDependencies": {
-    "@babel/core": "^7.3.4",
-    "@babel/runtime": "^7.3.4",
-    "babel-jest": "^24.5.0",
-    "jest": "^24.5.0",
-    "metro-react-native-babel-preset": "^0.53.1",
-    "react-test-renderer": "16.8.3"
-  },
   "peerDependencies": {
     "react": ">=16.8.3"
  },
-  "jest": {
-    "preset": "react-native"
-  },
   "author": "Teto Gómez <terencio.gomez@adsa.co> (http://adsa.co/)",
   "license": "MIT",
   "bugs": {
