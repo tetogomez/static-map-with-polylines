@@ -52,38 +52,46 @@ Please open your `info.plist` file and `add` this code:
 import { StaticMapPolylines, onOpenMap } from "static-map-with-polylines";
 
 export default function Example() {
-  function handleOnClick() {
-    onOpenMap({
-      latitude: 9.878673899999999,
-      longitude: -83.90911570000003,
-      sourceLatitude: 9.844878, 
-      sourceLongitude: -83.96617349999997,
-      googleForceLatLon: false,
-      // app: 'waze',
-      title: "Teto's house",
-      dialogTitle: "My dialog title test",
-      dialogMessage: "Just a dialog Message",
-      cancelText: "This is the cancel button text"
-    });
-  }
-
   return (
     <View style={styles.container}>
       <StaticMapPolylines
-        latitude={"9.878673899999999"}
-        longitude={"-83.90911570000003"}
-        originIcon={"http://i.imgur.com/bO2nzj9.png"}
-        latitudeDestination={"9.844878"}
-        longitudeDestination={"-83.96617349999997"}
-        destinationIcon={"http://i.imgur.com/bO2nzj9.png"}
+        firstLocation={{
+          latitude: "9.878673899999999",
+          longitude: "-83.90911570000003",
+          icon: "http://i.imgur.com/bO2nzj9.png"
+        }}
+        secondLocation={{
+          latitude: "9.844878",
+          longitude: "-83.96617349999997",
+          icon: "http://i.imgur.com/bO2nzj9.png"
+        }}
         zoom={12}
         apiKey={""} // here your google map api key
         directionsApiKey={""} // here your google map direction api key
       />
       <Button
-        style={styles.login}
         buttonLabel={"Open with"}
-        onClick={handleOnClick}
+        onClick={() => onOpenMap({
+          originAddress: {
+            latitude: 9.878673899999999,
+            longitude: -83.90911570000003
+          },
+          destinationAddress: {
+            latitude: 9.844878,
+            longitude: -83.96617349999997
+          },
+          // googleForceLatLon optionally force GoogleMaps to use the latlon for the query instead of the title
+          googleForceLatLon: false,
+          // app optionally specify app to open
+          app: null,
+          // optional
+          title: "Teto's house",
+          dialog: {
+            dialogTitle: "My dialog title test", // optional string (default: 'Open in Maps')
+            dialogMessage: "This is the amazing dialog Message", // optional (default: 'What app would you like to use?')
+            cancelText: "This is the cancel button text" // optional (default: 'Cancel')
+          }
+        })}
       />
     </View>
   );
