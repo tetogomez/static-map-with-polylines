@@ -2,7 +2,7 @@
 
 Do you want to show a preview map in your mobile application? Show map with one o two markers? Draw directions between locations (point to point)? Open a location in a map app whatever user's choice? This library brings all those features
 
-# Currently supported apps to open location:
+## Currently supported apps to open location:
 
 | App name        | Prop name     |
 |-----------------|---------------|
@@ -45,8 +45,6 @@ Please open your `info.plist` file and `add` this code:
     <string>yandexmaps</string>
 </array>
 ```
-
-
 
 ## Usage
 
@@ -91,6 +89,23 @@ export default function Example() {
   );
 }
 ```
+
+##Props
+
+| Prop             	| Type    	| Optional 	| Default                     	| Description                                                                                                                                                                                                                                                         	|
+|------------------	|---------	|----------	|-----------------------------	|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------	|
+| `firstLocation`  	| Object  	| No       	|                             	| Object with latitude and longitude location point, also you can send an optional icon property.<br/> Icon property is a image url example:``` { latitude: "9.878673899999999", longitude: "-83.90911570000003", icon: "http://i.imgur.com/bO2nzj9.png", // optional}``` 	|
+| `secondLocation` 	| object  	| Yes      	|                             	| Object with latitude and longitude location point, also you can send an optional icon property.Icon property is a image url example:``` { latitude: "9.878673899999999", longitude: "-83.90911570000003", icon: "http://i.imgur.com/bO2nzj9.png", // optional}``` 	|
+| zoom             	| number  	| Yes      	| 12                          	| Defines the map's zoom level.                                                                                                                                                                                                                                       	|
+| scale            	| number  	| Yes      	| calculated from PixelRatio. 	| scale=2 returns twice as many pixels as scale=1.                                                                                                                                                                                                                    	|
+| format           	| string  	| Yes      	| 'png'                       	| Format valid: - 'png' - 'png32' - 'jpg'- 'gif' - 'jpg-baseline'                                                                                                                                                                                                     	|
+| mapType          	| string  	| Yes      	| 'roadmap'                   	| Types valid: - 'roadmap' - 'satellite' - 'terrain' - 'hybrid'                                                                                                                                                                                                       	|
+| apiKey           	| string  	| No       	|                             	| Google API Key                                                                                                                                                                                                                                                      	|
+| directionsApiKey 	| string  	| No       	|                             	| Google directions API Key                                                                                                                                                                                                                                           	|
+| useMapOnlySignal 	| boolean 	| Yes      	| false                       	| useMapOnlySignal = true show map with only one market with out polylines.                                                                                                                                                                                           	|
+| mapHeight        	| number  	| Yes      	| 500                         	| the image size                                                                                                                                                                                                                                                      	|
+| style            	| object  	| Yes      	|                             	| View style                                                                                                                                                                                                                                                          	|
+
 
 ## Contributing
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
