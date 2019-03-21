@@ -1,3 +1,5 @@
+![npm](https://img.shields.io/npm/v/static-map-with-polyline.svg) ![npm](https://img.shields.io/npm/dt/static-map-with-polyline.svg) ![NPM](https://img.shields.io/npm/l/static-map-with-polyline.svg)
+
 # static-map-with-polylines
 
 Do you want to show a preview map in your mobile application? Show map with one o two markers? Draw directions between locations (point to point)? Open a location in a map app whatever user's choice? This library brings all those features
@@ -138,6 +140,12 @@ export default function Example() {
 
 ## Contributing
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
+
+## Authors
+
+This library is developed by [ADSA](http://adsa.co/), Guanacaste, Costa Rica.
+
+* Teto Gomez.
 
 ## Credits
 
